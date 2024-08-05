@@ -178,9 +178,22 @@ mvn spring-boot:run
 
 curl "http://localhost:8080/click-download?url=https://eservices.mas.gov.sg/Statistics/msb/ExchangeRates.aspx"
 
-
-
-
+ Map<String, Object> prefs = new HashMap<>();
+        prefs.put("download.default_directory", downloadPath);
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("plugins.always_open_pdf_externally", true);
+        
+        options.setExperimentalOption("prefs", prefs);
+        
+        WebDriver driver = new RemoteWebDriver(options);
+        
+ TimeUnit.SECONDS.sleep(10);
+Path filePath = Paths.get(downloadPath, fileName);
+            if (Files.exists(filePath)) {
+                return "Download button clicked and file downloaded successfully!";
+            } else {
+                return "Download button clicked but file not found!";
+            }
 
 
 
