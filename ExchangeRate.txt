@@ -120,7 +120,44 @@ public class SeleniumController {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+package com.example.seleniumapi.controller;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class SeleniumController {
+
+    @GetMapping("/click-download")
+    public String clickDownload(@RequestParam String url) {
+        // Specify the path to your ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Run in headless mode if you don't need to see the browser
+
+        WebDriver driver = new ChromeDriver(options);
+        
+        try {
+            driver.get(url);
+            WebElement downloadButton = driver.findElement(By.id("MainContent_btnDownload")); // Adjust the selector as needed
+            downloadButton.click();
+            return "Download button clicked successfully!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to click the download button: " + e.getMessage();
+        } finally {
+            driver.quit();
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 mvn spring-boot:run
 
