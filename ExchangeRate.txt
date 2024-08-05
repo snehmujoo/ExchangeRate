@@ -1,0 +1,115 @@
+<dependencies>
+    <!-- Spring Boot Dependencies -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Selenium Dependencies -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.1.2</version>
+    </dependency>
+    
+    <!-- WebDriver Manager for managing drivers -->
+    <dependency>
+        <groupId>io.github.bonigarcia</groupId>
+        <artifactId>webdrivermanager</artifactId>
+        <version>5.0.3</version>
+    </dependency>
+</dependencies>
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+package com.example.seleniumapi;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SeleniumApiApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SeleniumApiApplication.class, args);
+    }
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+package com.example.seleniumapi.controller;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+@RestController
+public class SeleniumController {
+
+    @GetMapping("/click-download")
+    public String clickDownload(@RequestParam String url) {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Run in headless mode if you don't need to see the browser
+
+        WebDriver driver = new ChromeDriver(options);
+        
+        try {
+            driver.get(url);
+            WebElement downloadButton = driver.findElement(By.id("MainContent_btnDownload")); // Adjust the selector as needed
+            downloadButton.click();
+            return "Download button clicked successfully!";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to click the download button: " + e.getMessage();
+        } finally {
+            driver.quit();
+        }
+    }
+}
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+mvn spring-boot:run
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+curl "http://localhost:8080/click-download?url=https://eservices.mas.gov.sg/Statistics/msb/ExchangeRates.aspx"
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
